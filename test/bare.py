@@ -4,9 +4,11 @@ import os
 
 from psutil import Process
 
+from xmemory import trace
+
 
 def main():
-    pid: int = os.getpid()
+    trace.top_malloc()
     pid: int = os.getpid()
     print(f"Hello, PID {pid}")
     process: Process = Process(pid)
