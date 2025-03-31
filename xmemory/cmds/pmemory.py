@@ -13,7 +13,7 @@ from xkits_command import CommandExecutor
 
 from xmemory.attribute import __urlhome__
 from xmemory.attribute import __version__
-from xmemory.process import MemoryInfo
+from xmemory.process import DeltaMemoryInfo
 from xmemory.process import ProcessInfo
 
 
@@ -25,16 +25,15 @@ def add_cmd(_arg: ArgParser):  # pylint: disable=unused-argument
 
 @CommandExecutor(add_cmd)
 def run_cmd(cmds: Command) -> int:  # pylint: disable=unused-argument
-    memory_info: MemoryInfo
-    delta_memory_info: MemoryInfo
+    delta_memory_info: DeltaMemoryInfo
     pid: int = cmds.args.pid or getpid()
     process: ProcessInfo = ProcessInfo(pid)
-    _, memory_info, _ = process.delta_memory_info
+    delta_memory_info = process.delta_memory_info
     cmds.stdout(f"PID {pid} memory usage:")
-    cmds.stdout(MemoryInfo.TITLE)
+    cmds.stdout(DeltaMemoryInfo.TITLE)
     while True:
-        delta_memory_info, memory_info, _ = process.delta_memory_info
-        cmds.stdout(memory_info)
+        delta_memory_info = process.delta_memory_info
+        cmds.stdout(delta_memory_info)
         sleep(1)
     return ENOTRECOVERABLE
 
