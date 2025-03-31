@@ -19,14 +19,15 @@ from xmemory.process import ProcessInfo
 
 @CommandArgument("pmemory", description="View memory usage of a process")
 def add_cmd(_arg: ArgParser):  # pylint: disable=unused-argument
-    pass
+    _arg.add_argument(dest="pid", type=int, help="PID of the process",
+                      nargs="?", metavar="PID")
 
 
 @CommandExecutor(add_cmd)
 def run_cmd(cmds: Command) -> int:  # pylint: disable=unused-argument
-    pid: int = getpid()
     memory_info: MemoryInfo
     delta_memory_info: MemoryInfo
+    pid: int = cmds.args.pid or getpid()
     process: ProcessInfo = ProcessInfo(pid)
     _, memory_info, _ = process.delta_memory_info
     cmds.stdout(f"PID {pid} memory usage:")
