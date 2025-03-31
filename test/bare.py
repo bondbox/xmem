@@ -1,20 +1,14 @@
 # coding:utf-8
 
-import os
-
-from psutil import Process
-
-from xmemory import trace
+from xmemory.process import MemoryInfo
+from xmemory.process import ProcessInfo
 
 
 def main():
-    trace.top_malloc()
-    pid: int = os.getpid()
-    print(f"Hello, PID {pid}")
-    process: Process = Process(pid)
-    memory_info = process.memory_info()
-    print(f"VMS (Virtual Memory Size)\t{memory_info.vms / 1024 / 1024:.2f} MB\t{memory_info.vms}")  # noqa:E501
-    print(f"RSS (Resident Set Size)  \t{memory_info.rss / 1024 / 1024:.2f} MB\t{memory_info.rss}")  # noqa:E501
+    process: ProcessInfo = ProcessInfo()
+    print("Memory usage:")
+    print(MemoryInfo.TITLE)
+    print(process.memory_info)
     print("Goodbye!")
 
 
