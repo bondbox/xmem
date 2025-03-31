@@ -19,6 +19,8 @@ from xmemory.process import ProcessInfo
 
 @CommandArgument("pmemory", description="View memory usage of a process")
 def add_cmd(_arg: ArgParser):  # pylint: disable=unused-argument
+    _arg.add_argument("-i", type=int, dest="interval", help="Interval seconds",
+                      default=1, metavar="SECONDS")
     _arg.add_argument(dest="pid", type=int, help="PID of the process",
                       nargs="?", metavar="PID")
 
@@ -28,13 +30,14 @@ def run_cmd(cmds: Command) -> int:  # pylint: disable=unused-argument
     delta_memory_info: DeltaMemoryInfo
     pid: int = cmds.args.pid or getpid()
     process: ProcessInfo = ProcessInfo(pid)
+    interval: int = max(cmds.args.interval, 1)
     delta_memory_info = process.delta_memory_info
     cmds.stdout(f"PID {pid} memory usage:")
     cmds.stdout(DeltaMemoryInfo.TITLE)
     while True:
         delta_memory_info = process.delta_memory_info
         cmds.stdout(delta_memory_info)
-        sleep(1)
+        sleep(interval)
     return ENOTRECOVERABLE
 
 
